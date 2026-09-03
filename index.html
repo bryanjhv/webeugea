@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>WebEugea</title>
+		<link rel="icon" href="https://bryanjhv.com/favicon.ico" />
+		<link rel="stylesheet" href="./src/styles.css" />
+	</head>
+	<body x-data="app">
+		<header>
+			<p>WebEugea</p>
+		</header>
+		<main>
+			<aside>
+				<p><strong x-text="filteredData.length"></strong> disponibles</p>
+				<button type="button" @click="filtersOpen = !filtersOpen" :aria-expanded="filtersOpen">
+					<span x-text="filtersOpen ? 'Ocultar filtros' : 'Mostrar filtros'"></span>
+					<span :class="{ 'is-open': filtersOpen }">▾</span>
+				</button>
+				<div :class="{ 'is-open': filtersOpen }">
+					<template x-for="field in filterFields" :key="field.field">
+						<fieldset>
+							<legend x-text="field.label"></legend>
+							<div>
+								<template x-for="option in options(field.field)" :key="option.value">
+									<label :class="{ 'is-empty': option.count === 0 }">
+										<input
+											type="checkbox"
+											:value="option.value"
+											x-model="filters[field.field]"
+											@change="$refs.content.scrollTop = 0"
+										/>
+										<span x-text="option.value"></span>
+										<small x-text="option.count"></small>
+									</label>
+								</template>
+							</div>
+						</fieldset>
+					</template>
+				</div>
+			</aside>
+			<section x-ref="content">
+				<div>
+					<template x-for="item in filteredData" :key="item.id_usuario">
+						<article
+							:class="{ 'is-top': item.top === '1' }"
+							role="button"
+							tabindex="0"
+							@click="openPreview(item)"
+							@keydown.enter="openPreview(item)"
+							@keydown.space.prevent="openPreview(item)"
+						>
+							<header :title="item.nacionalidad">
+								<span x-text="nationalityFlag(item)"></span>
+								<span x-text="`${item.nombre_usuario} (${item.edad})`"></span>
+							</header>
+							<div>
+								<img :src="mainPhoto(item)" :alt="item.nombre_usuario" loading="lazy" decoding="async" />
+								<div
+									:class="{ 'is-verified': isVerified(item) }"
+									x-text="isVerified(item) ? '✅' : '❌'"
+									:title="isVerified(item) ? 'Verificada' : 'No verificada'"
+									:aria-label="isVerified(item) ? 'Verificada' : 'No verificada'"
+								></div>
+								<div :title="`Puntuación ${item.puntuacion}`" :aria-label="`Puntuación ${item.puntuacion}`">
+									⭐ <span x-text="item.puntuacion"></span>
+								</div>
+								<div :title="`${views(item)} vistas`" :aria-label="`${views(item)} vistas`">
+									👁 <span x-text="views(item)"></span>
+								</div>
+							</div>
+							<div>
+								<div x-text="item.nombre_de_distrito_1"></div>
+								<div x-show="price(item)" x-text="price(item)"></div>
+							</div>
+						</article>
+					</template>
+				</div>
+			</section>
+		</main>
+		<dialog
+			tabindex="-1"
+			x-ref="previewDialog"
+			@click="$event.target === $refs.previewDialog && $refs.previewDialog.close()"
+			@close="previewUrl = ''"
+		>
+			<form method="dialog">
+				<button @click="openInNewTab()" title="Abrir en pestaña nueva" x-text="previewUrl"></button>
+				<button aria-label="Cerrar" title="Cerrar">✕</button>
+			</form>
+			<iframe
+				:src="previewUrl || null"
+				title="Perfil original"
+				referrerpolicy="no-referrer"
+				sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+			></iframe>
+		</dialog>
+		<script type="module" src="./src/main.ts"></script>
+	</body>
+</html>
