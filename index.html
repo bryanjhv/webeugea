@@ -97,5 +97,10 @@
 			></iframe>
 		</dialog>
 		<script type="module" src="./src/main.ts"></script>
+		<script>
+			window.vaq = []
+			window.va = () => window.vaq.push(arguments)
+		</script>
+		<script defer src="/<unique-path>/script.js"></script>
 	</body>
 </html>
