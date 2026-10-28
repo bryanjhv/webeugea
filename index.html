@@ -4,12 +4,12 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>WebEugea</title>
-		<link rel="icon" href="https://bryanjhv.com/favicon.ico" />
+		<link rel="icon" href="/favicon.ico" />
 		<link rel="stylesheet" href="./src/styles.css" />
 	</head>
 	<body x-data="app">
 		<header>
-			<p>WebEugea</p>
+			<p x-text="/(.+).vercel/.exec(location.host)?.[1].toUpperCase() ?? 'WebEugea'">WebEugea</p>
 		</header>
 		<main>
 			<aside>
