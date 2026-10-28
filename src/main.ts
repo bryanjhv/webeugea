@@ -35,6 +35,7 @@ const FILTER_FIELDS: FilterField[] = [
 	{ field: 'anuncio_verificado', label: 'Verificado' },
 	{ field: 'nacionalidad', label: 'Nacionalidad' },
 	{ field: 'edad', label: 'Edad' },
+	{ field: 'puntuacion', label: 'Estrellas' },
 	{ field: 'nombre_de_departamento', label: 'Departamento' },
 	{ field: 'nombre_de_provincia', label: 'Provincia' },
 	{ field: 'nombre_de_distrito_1', label: 'Distrito' },
@@ -66,7 +67,7 @@ Alpine.data<App, never>('app', () => ({
 			if (!counts.has(value))
 				counts.set(value, 0)
 		}
-		const numeric = field === 'edad'
+		const numeric = field === 'edad' || field === 'puntuacion'
 		return [...counts.entries()]
 			.map(([value, count]) => ({ value, count }))
 			.sort(numeric
